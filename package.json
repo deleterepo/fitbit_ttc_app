@@ -1,0 +1,36 @@
+{
+  "fitbit": {
+    "appType": "app",
+    "appDisplayName": "BART",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#f44336",
+    "requestedPermissions": [
+      "access_internet"
+    ],
+    "buildTargets": [
+      "higgs",
+      "meson"
+    ],
+    "i18n": {
+      "en": {
+        "name": "BART"
+      }
+    }
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "nodemon": "^1.17.3"
+  },
+  "dependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "bluebird": "^3.5.1",
+    "es6-promise": "^4.2.4",
+    "isomorphic-fetch": "^2.2.1",
+    "limiter": "^1.1.3",
+    "node-bitlyapi": "^0.4.0",
+    "node-rate-limiter": "^1.0.1"
+  },
+  "scripts": {
+    "start": "nodemon ./companion/ttc.js --exec babel-node --presets es2015"
+  }
+}
