@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { STOPS } from "../common/stops.js";
-import { SCRIPT_URL } from "../common/globals.js";
+import { STOPS_JSON, SCRIPT_URL } from "../common/globals.js";
 var Promise = require("bluebird");
 
 
@@ -17,29 +16,35 @@ function fetchMapped(url) {
 
 }
 
-export function BartAPI() {};
+export function BartAPI() { };
 
 BartAPI.prototype.realTimeDepartures = function (userLat, userLon, direction) {
   let self = this;
 
   return new Promise(function (resolve, reject) {
-    let stopsByDistance = STOPS.sort(function (a, b) {
-      var origLat = 43.6451965,
-        origLong = -79.4020613;
-
-      return distance(origLat, origLong, a.lat, a.lon) - distance(origLat, origLong, b.lat, b.lon);
-    });
-
-    const closestStop = stopsByDistance[0];
-    const predictionsUrl = SCRIPT_URL + "&command=predictions" + "&stopid=" + closestStop.stopId;
-
-    fetch(predictionsUrl).then(function (response) {
+    fetch(STOPS_JSON).then(function (response) {
       return response.json();
-    }).then(function(predictions) {
-      console.log(predictions);
+    }).then(function (json) {
+      const stops = json.stops;
+      let stopsByDistance = stops.sort(function (a, b) {
+        var origLat = 43.6451965,
+          origLong = -79.4020613;
 
-      resolve(predictions);
+        return distance(origLat, origLong, a.lat, a.lon) - distance(origLat, origLong, b.lat, b.lon);
+      });
+
+      const closestStop = stopsByDistance[0];
+      const predictionsUrl = SCRIPT_URL + "&command=predictions" + "&stopid=" + closestStop.stopId;
+
+      fetch(predictionsUrl).then(function (response) {
+        return response.json();
+      }).then(function (predictions) {
+        console.log(predictions);
+
+        resolve(predictions);
+      });
     });
+
   });
 };
 
